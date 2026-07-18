@@ -31,6 +31,10 @@ function M:update(dt)
 	else
 		game.DBG_TIME_MULT = nil
 		M:set_active(false)
+		if M.btn_added then
+			M.btn_added = false
+			M.btn = nil
+		end
 	end
 
 	M.prev_in_game = in_game
