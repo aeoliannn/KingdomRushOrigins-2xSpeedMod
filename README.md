@@ -21,6 +21,4 @@
 
 ## Notes
 
-- Speed resets to 1x automatically when returning to the map/menu.
-- The hotkey only works while in a level (not on menus or map).
-- Settings persistence is handled automatically once installed (`custom_script` is re-injected on every save by the mod).
+- No game files are modified — drops into the save directory only
