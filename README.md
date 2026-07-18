@@ -40,7 +40,3 @@ The game engine natively supports loading a `custom_script` module from the save
 |---|---|
 | `F` | Toggle 2x speed on/off |
 | Click | Toggle via the "1x Speed" / "2x Speed" button in the bottom HUD (beside skip-wave) |
-
-## Notes
-
-- No game files are modified — drops into the save directory only
