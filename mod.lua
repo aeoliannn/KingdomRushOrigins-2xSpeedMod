@@ -1,10 +1,12 @@
-local V = require("klua.vector")
+local ok, V = pcall(require, "klua.vector")
+if not ok then V = require("hump.vector-light") end
 
 local M = {
 	active = false,
 	btn_added = false,
 	btn = nil,
-	prev_in_game = false
+	prev_in_game = false,
+	_last_click = 0
 }
 
 function M:init()
@@ -57,21 +59,30 @@ function M:add_button()
 	local nwb = gg.next_wave_button
 	M._nw = nw
 
-	local btn = GGOptionsButton:new("1x Speed")
+	local ok, btn = pcall(function()
+		return GGOptionsButton:new("1x Speed")
+	end)
+	if not ok or not btn then return end
+	if not btn.size or not nwb.pos or not nwb.size then return end
+
 	btn.anchor = V.v(math.floor(btn.size.x / 2), btn.size.y)
 	btn.pos = V.v(nwb.pos.x - nwb.size.x / 2 - btn.size.x / 2 - 6, nwb.pos.y)
 
 	function btn.on_click(self)
+		local t = os.clock()
+		if t - M._last_click < 0.25 then return end
+		M._last_click = t
 		M:set_active(not M.active)
 	end
 
+	if not nw.add_child then return end
 	nw:add_child(btn)
 	M.btn = btn
 end
 
 function M:set_active(v)
 	M.active = v
-	if M.btn then
+	if M.btn and M.btn.label then
 		M.btn.label.text = v and "2x Speed" or "1x Speed"
 	end
 end
