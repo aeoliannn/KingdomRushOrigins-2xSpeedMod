@@ -24,6 +24,12 @@ function M:update(dt)
 	local in_game = game.game_gui ~= nil
 
 	if in_game then
+		local gg = game.game_gui
+		if M.btn_added and gg and gg.hud_bottom and gg.hud_bottom.next_wave ~= M._nw then
+			M.btn_added = false
+			M.btn = nil
+			M._nw = nil
+		end
 		if not M.btn_added then
 			M:add_button()
 		end
@@ -34,6 +40,7 @@ function M:update(dt)
 		if M.btn_added then
 			M.btn_added = false
 			M.btn = nil
+			M._nw = nil
 		end
 	end
 
@@ -48,6 +55,7 @@ function M:add_button()
 
 	local nw = gg.hud_bottom.next_wave
 	local nwb = gg.next_wave_button
+	M._nw = nw
 
 	local btn = GGOptionsButton:new("1x Speed")
 	btn.anchor = V.v(math.floor(btn.size.x / 2), btn.size.y)
