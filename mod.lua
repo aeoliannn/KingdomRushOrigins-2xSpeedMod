@@ -6,7 +6,7 @@ local M = {
 	btn_added = false,
 	btn = nil,
 	prev_in_game = false,
-	_last_click = 0
+	_last_toggle = 0
 }
 
 function M:init()
@@ -68,10 +68,10 @@ function M:add_button()
 	btn.anchor = V.v(math.floor(btn.size.x / 2), btn.size.y)
 	btn.pos = V.v(nwb.pos.x - nwb.size.x / 2 - btn.size.x / 2 - 6, nwb.pos.y)
 
-	function btn.on_click(self)
+	function btn.on_click(self, ...)
 		local t = os.clock()
-		if t - M._last_click < 0.25 then return end
-		M._last_click = t
+		if t - M._last_toggle < 0.15 then return end
+		M._last_toggle = t
 		M:set_active(not M.active)
 	end
 
@@ -82,14 +82,21 @@ end
 
 function M:set_active(v)
 	M.active = v
-	if M.btn and M.btn.label then
-		M.btn.label.text = v and "2x Speed" or "1x Speed"
+	if M.btn then
+		if M.btn.label then
+			M.btn.label.text = v and "2x Speed" or "1x Speed"
+		end
+		M.btn.original_scale = nil
+		M.btn.scale.x, M.btn.scale.y = 1, 1
 	end
 end
 
 function M:keypressed(key, isrepeat)
-	if key ~= "f" then return end
+	if key ~= "f" or isrepeat then return end
 	if not game or not game.game_gui then return end
+	local t = os.clock()
+	if t - M._last_toggle < 0.15 then return end
+	M._last_toggle = t
 	M:set_active(not M.active)
 end
 
